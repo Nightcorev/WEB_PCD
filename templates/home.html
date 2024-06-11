@@ -1,0 +1,51 @@
+{% extends "layout.html" %} {% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="sidebar">
+                <ul class="list-unstyled">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li>
+                        <a href="#submenu" data-toggle="collapse" aria-expanded="false"
+                            class="dropdown-toggle">Services</a>
+                        <ul class="collapse list-unstyled" id="submenu">
+                            <li><a href="#">Web Design</a></li>
+                            <li><a href="#">Graphic Design</a></li>
+                            <li><a href="#">Digital Marketing</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="jumbotron jumbotron-fluid">
+                <div class="container">
+                    <h1 class="display-4 align-self-center">Ubah Judul Ini</h1>
+                    <p class="lead"> Deskripsi.</p>
+                    <form id="" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+                        Ubah Button Ini...
+                        <input name="file" type="file" id="inputGroupFile04" accept="image/*">
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4 align-self-center">Ubah Judul Ini</h1>
+        <p class="lead"> Deskripsi.</p>
+        <form id="" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+            Ubah Button Ini...
+            <input name="file" type="file" id="inputGroupFile04" accept="image/*">
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+</div>

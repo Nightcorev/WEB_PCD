@@ -2,7 +2,7 @@ import numpy as np
 from PIL import Image
 import image_processing
 import os
-from flask import Flask, render_template, request, make_response
+from flask import Flask, render_template, request, make_response, Response
 from datetime import datetime
 from functools import wraps, update_wrapper
 from shutil import copyfile
@@ -244,8 +244,13 @@ def emoji():
 @app.route("/mask_detect", methods=["POST"])
 @nocache
 def mask_detect():
-    hasil_deteksi_mask = image_processing.mask_detect()
-    return hasil_deteksi_mask
+    return render_template("facemask.html")
+
+@app.route("/mask_detect_frame")
+@nocache
+def mask_detect_frame():
+    return Response(image_processing.mask_detect(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
+

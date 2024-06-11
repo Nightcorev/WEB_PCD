@@ -560,7 +560,7 @@ def checkemoji():
     return detected_emojis_str
 
 def mask_detect():
-# Load the trained model
+    # Load the trained model
     model = YOLO('SampleYolo/best.pt')
 
     # Initialize the webcam
@@ -568,13 +568,13 @@ def mask_detect():
 
     if not cap.isOpened():
         print("Error: Could not open camera.")
-        exit()
+        return
 
     # Set the initial confidence threshold
-    min_conf_threshold = 0.5
+    min_conf_threshold = 0.8
 
     def on_trackbar(val):
-        global min_conf_threshold
+        nonlocal min_conf_threshold
         min_conf_threshold = val / 100
 
     # Create a window and a trackbar for adjusting the threshold
@@ -603,22 +603,25 @@ def mask_detect():
                     x1, y1, x2, y2 = map(int, box.xyxy[0])
                     cls = box.cls[0]
                     label = f'{model.names[int(cls)]} {conf:.2f}'
-                    
+
                     # Choose color based on the class label
                     if model.names[int(cls)] == 'mask':
                         color = color_mask
                     else:
                         color = color_no_mask
-                    
+
                     cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
                     cv2.putText(frame, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.9, color, 2)
 
-        # Display the resulting frame
-        cv2.imshow('YOLOv8 Live Prediction', frame)
+        # Encode the frame in JPEG format
+        ret, jpeg = cv2.imencode('.jpg', frame)
+        if not ret:
+            continue
 
-        # Break the loop on 'q' key press
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            return render_template("home.html", file_path="img/image_here.jpg")
+        # Yield the output frame in byte format
+        frame = jpeg.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
     # Release the webcam and close windows
     cap.release()

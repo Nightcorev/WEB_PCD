@@ -251,6 +251,16 @@ def mask_detect():
 def mask_detect_frame():
     return Response(image_processing.mask_detect(),mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
+@app.route("/face_mask_image", methods=["POST"])
+@nocache
+def face_mask_image():
+    # Tentukan path untuk gambar input
+    file_path_input = "static/img/img_normal.jpg"
+    file_path_output = "static/img/img_now.jpg"
+    image_processing.mask_image_detection(file_path_input, file_path_output)
+    return render_template("face_mask_image.html", file_path="img/img_now.jpg")
+
 if __name__ == '__main__':
     app.run(debug=True, host="0.0.0.0")
 

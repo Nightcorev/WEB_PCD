@@ -1,6 +1,6 @@
 from flask import render_template
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 import matplotlib.pyplot as plt
 import math
 from collections import Counter
@@ -627,3 +627,57 @@ def mask_detect():
     cap.release()
     cv2.destroyAllWindows()
 
+
+def mask_image_detection(image_path, output_path):
+    # Load the trained model
+    model = YOLO('SampleYolo/best.pt')
+
+    # Load the image from file
+    image = cv2.imread(image_path)
+    if image is None:
+        print("Error: Could not read image.")
+        return
+
+    # Convert image to RGB format (PIL uses RGB)
+    image_pil = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    image_pil = Image.fromarray(image_pil)
+
+    # Set the confidence threshold
+    min_conf_threshold = 0.8
+
+    # Define colors for "mask" and "no-mask"
+    color_mask = (0, 255, 0)  # Green for mask
+    color_no_mask = (0, 0, 255)  # Red for no mask
+
+    # Run prediction on the image
+    results = model.predict(source=image)
+
+    # Draw the results on the image
+    draw = ImageDraw.Draw(image_pil)
+    font = ImageFont.load_default()
+
+    for result in results:
+        for box in result.boxes:
+            conf = box.conf[0]
+            if conf >= min_conf_threshold:  # Apply the confidence threshold
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                cls = box.cls[0]
+                label = f'{model.names[int(cls)]} {conf:.2f}'
+
+                # Choose color based on the class label
+                if model.names[int(cls)] == 'mask':
+                    color = color_mask
+                else:
+                    color = color_no_mask
+
+                draw.rectangle([x1, y1, x2, y2], outline=color, width=2)
+                
+                # Set font size to a larger value
+                font_size = 20
+                font = ImageFont.truetype("arial.ttf", font_size)
+                
+                draw.text((x1, y1 - 20), label, font=font, fill=color)
+
+    # Save the processed image to the specified output path
+    image_pil.save(output_path)
+    print(f"Processed image saved to {output_path}")

@@ -214,6 +214,7 @@
                                     <button type="submit" class="btn btn-primary btn-block">Deteksi Emoji</button>
                                 </form>
                             </li>
+
                         </ul>
                     </li>
                     <li class="border-bottom">
@@ -245,16 +246,10 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-lg-12">
-                                <h3 class="text-center mb-4">After</h3>
-                                <img class="img-fluid mx-auto d-block" src="{{ url_for('static', filename=file_path) }}"
-                                    alt="image here">
-                                {% if request.path == url_for('counting') %}
-                                <p class="text-center">Jumlah objek: {{ jumlah_object }}</p>
-                                {% elif request.path == url_for('fcc') %}
-                                <p class="text-center">Hasil Deteksi Angka: {{ hasil_digit }}</p>
-                                {% elif request.path == url_for('emoji') %}
-                                <p class="text-center">Hasil Deteksi Emoji: {{ hasil_deteksi }}</p>
-                                {% endif %}
+                                <div class="col-lg-12">
+                                    <h1>Camera Stream</h1>
+                                    <img src="{{ url_for('mask_detect_frame') }}" width="640" height="640">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -449,8 +444,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <h3>After</h3>
-                        <img class="img-fluid" src="{{ url_for('static', filename=file_path) }}" alt="image here">
+                        <h1>Camera Stream</h1>
+                        <img src="{{ url_for('mask_detect_frame') }}" width="640" height="640">
                     </div>
                 </div>
             </div>
